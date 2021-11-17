@@ -15,16 +15,35 @@ RUN mkdir -p /dist/bin && \
     mkdir -p /dist/tmp && \
     mv ${GOPATH}/bin/dgraph /dist/bin/dgraph
 
-FROM alpine:latest as dgraph
+FROM ubuntu:20.04 as dgraph
+LABEL maintainer="Dgraph Labs <contact@dgraph.io>"
+
+RUN apt-get update && \
+  apt-get install -y --no-install-recommends \
+    ca-certificates \
+    curl \
+    htop \
+    iputils-ping \
+    jq \
+    less \
+    sysstat && \
+  curl -fsSL https://deb.nodesource.com/setup_14.x | bash - && \
+  apt-get install -y nodejs && \
+  rm -rf /var/lib/apt/lists/*
+
 COPY --from=builder /dist /
 ENV PATH=$PATH:/bin/
-RUN chmod +x /bin/dgraph && apk --update --no-cache add bash nodejs npm
+RUN chmod +x /bin/dgraph 
 
-# Dgraph node type | gRPC-internal | gRPC-external | HTTP-external
-#             zero |          5080 |             - |          6080
-#            alpha |          7080 |          9080 |          8080
-#            ratel |             - |             - |          8000
-EXPOSE 5080 6080 7080 8080 8000 9080
-CMD ["/bin/dgraph", "version"]
+EXPOSE 8080
+EXPOSE 9080
+EXPOSE 5080 
+EXPOSE 6080 
+EXPOSE 7080 
+EXPOSE 8000
 
+RUN mkdir /dgraph
+WORKDIR /dgraph
 
+ENV GODEBUG=madvdontneed=1
+CMD ["/bin/dgraph"] # Shows the dgraph version and commands available.
