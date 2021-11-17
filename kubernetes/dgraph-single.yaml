@@ -57,6 +57,7 @@ spec:
           - "-c"
           - |
             set -ex
+            cp /dgraph/bin/dgraph /bin/dgraph
             dgraph zero --my=$(hostname -f):5080
       - name: alpha
         image: ghcr.io/jmcarbo/dgraph:v21.03.02
@@ -80,6 +81,7 @@ spec:
           - "-c"
           - |
             set -ex
+            cp /dgraph/bin/dgraph /bin/dgraph
             dgraph alpha --my=$(hostname -f):7080 --zero dgraph-0.dgraph.dgraph.svc.cluster.local:5080
             #dgraph alpha --my=$(hostname -f):7080 --zero dgraph-0.dgraph.${POD_NAMESPACE}:5080
       terminationGracePeriodSeconds: 60

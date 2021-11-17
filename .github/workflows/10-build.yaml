@@ -6,7 +6,7 @@ on:
       tag:
         description: 'Image tag'
         required: true
-        default: 'v21.03.02'
+        default: 'v21.03.03'
 
 jobs:
   buildx:
