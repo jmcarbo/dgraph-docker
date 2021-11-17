@@ -31,9 +31,9 @@ RUN apt-get update && \
   apt-get install -y nodejs && \
   rm -rf /var/lib/apt/lists/*
 
-COPY --from=builder /dist /
-ENV PATH=$PATH:/bin/
-RUN chmod +x /bin/dgraph 
+COPY --from=builder /dist /dgraph
+ENV PATH=$PATH:/dgraph/bin/
+RUN chmod +x /dgraph/bin/dgraph 
 
 EXPOSE 8080
 EXPOSE 9080
@@ -42,8 +42,7 @@ EXPOSE 6080
 EXPOSE 7080 
 EXPOSE 8000
 
-RUN mkdir /dgraph
 WORKDIR /dgraph
 
 ENV GODEBUG=madvdontneed=1
-CMD ["/bin/dgraph"] # Shows the dgraph version and commands available.
+CMD ["/dgraph/bin/dgraph"] # Shows the dgraph version and commands available.
