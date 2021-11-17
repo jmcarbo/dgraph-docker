@@ -1,0 +1,56 @@
+# This is the service that should be used by the clients of Dgraph to talk to the cluster.
+apiVersion: v1
+kind: Service
+metadata:
+  name: graphiql-public
+  labels:
+    app: graphiql
+spec:
+  type: ClusterIP
+  ports:
+  - port: 4000
+    targetPort: 4000
+    name: graphiql
+  selector:
+    app: graphiql
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: graphiql
+  name: graphiql
+  namespace: dgraph
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: graphiql
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: graphiql
+    spec:
+      containers:
+      - image: ghcr.io/jmcarbo/graphiql:v21.03
+        imagePullPolicy: IfNotPresent
+        name: graphiql
+        env:
+        - name: API_ENDPOINT
+          value: http://dgraph-alpha-public:8080/graphql
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30

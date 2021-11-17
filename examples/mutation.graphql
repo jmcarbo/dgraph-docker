@@ -1,0 +1,8 @@
+mutation {
+ addCustomer(input: [{ username: "Michael"}]) {
+    customer {
+      username
+    }
+  }
+}
+
