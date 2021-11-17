@@ -41,7 +41,7 @@ spec:
     spec:
       containers:
       - name: zero
-        image: ghcr.io/jmcarbo/dgraph:v21.03.01
+        image: ghcr.io/jmcarbo/dgraph:v21.03.02
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 5080
@@ -59,7 +59,7 @@ spec:
             set -ex
             dgraph zero --my=$(hostname -f):5080
       - name: alpha
-        image: ghcr.io/jmcarbo/dgraph:v21.03.01
+        image: ghcr.io/jmcarbo/dgraph:v21.03.02
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8080
